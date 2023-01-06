@@ -1,9 +1,13 @@
 <?php
 namespace Watchthedot\Library\Settings;
 
-use Watchthedot\Library\Settings\Field\Field;
-
 class SettingsPage {
+
+	public const VERSION = "1.0.0";
+
+	public static $assets_url;
+
+	private string $plugin_file;
 
 	private string $title;
 
@@ -19,7 +23,12 @@ class SettingsPage {
 	 */
 	private array $tabs = [];
 
-	public function __construct( string $title, string $prefix ) {
+	public function __construct( string $file, string $title, string $prefix ) {
+		$this->plugin_file = $file;
+		$plugin_directory = dirname($this->plugin_file);
+
+		self::$assets_url = plugins_url(str_replace($plugin_directory, "", dirname(__DIR__)) . '/assets', $file);
+
 		$this->title = $title;
 		$this->prefix = $prefix;
 
