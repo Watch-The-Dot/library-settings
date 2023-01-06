@@ -5,9 +5,9 @@ abstract class Field {
 
 	protected string $key;
 
-	private string $label;
+	protected $default = false;
 
-	private $default = false;
+	private string $label;
 
 	public function __construct( string $key, ?string $label = null ) {
 		if (is_null($label)) {
@@ -51,4 +51,8 @@ abstract class Field {
 	public abstract function build( $name, $value );
 
 	public abstract function sanitize( $value );
+
+	public function register_scripts() {
+		// NO-OP
+	}
 }

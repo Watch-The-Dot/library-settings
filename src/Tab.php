@@ -41,6 +41,22 @@ class Tab {
 		}
 	}
 
+	public function register_scripts(): void {
+		$field_types_run = [];
+
+		foreach ($this->fields as $field) {
+			$class_name = get_class($field);
+
+			if (in_array($class_name, $field_types_run, true)) {
+				continue;
+			}
+
+			$field->register_scripts();
+
+			$field_types_run[] = $class_name;
+		}
+	}
+
 	public function get_name(): string {
 		return $this->name;
 	}

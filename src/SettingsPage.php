@@ -81,8 +81,12 @@ class SettingsPage {
 				default:
 					return;
 			}
-			// add_action( 'admin_print_styles-' . $page, [ $this, 'settings_assets' ] );
+			add_action( 'admin_print_styles-' . $page, fn () => $this->add_scripts() );
 		}
+	}
+
+	private function add_scripts(): void {
+		$this->get_current_tab()->register_scripts();
 	}
 
 	private function show_page(): void {
