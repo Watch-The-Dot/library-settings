@@ -45,7 +45,7 @@ abstract class Field {
 	private function pre_build( array $args ) {
 		$option_name = $args['prefix'] . '_' . $this->key;
 
-		$current_value = get_option( $option_name, $this->default );
+		$current_value = get_option( $option_name, $this->default ) ?: $this->default;
 
 		$this->build($option_name, $current_value);
 	}
