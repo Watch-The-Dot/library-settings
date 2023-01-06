@@ -1,9 +1,9 @@
 <?php
 namespace Watchthedot\Library\Settings;
 
-class SettingsPage {
+use Watchthedot\Library\Settings\Field\Color;
 
-	public const VERSION = "1.0.0";
+class SettingsPage {
 
 	public static $assets_url;
 
@@ -51,6 +51,8 @@ class SettingsPage {
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
+
+		class_alias( Color::class, __NAMESPACE__ . "\\Field\\Colour" );
 	}
 
 	public function add_tab( Tab $tab ) {

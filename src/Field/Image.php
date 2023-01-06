@@ -1,10 +1,11 @@
 <?php
 namespace Watchthedot\Library\Settings\Field;
 
-use Watchthedot\Library\Settings\LibSettings;
 use Watchthedot\Library\Settings\SettingsPage;
 
 class Image extends Field {
+
+	private const VERSION = 1;
 
 	private bool $multiple = false;
 
@@ -50,7 +51,7 @@ class Image extends Field {
 			'libsettings-field-image',
 			SettingsPage::$assets_url . '/scripts/field/image.js',
 			[ 'jquery' ],
-			SettingsPage::VERSION,
+			self::VERSION,
 			true
 		);
 
@@ -58,11 +59,19 @@ class Image extends Field {
 			'libsettings-field-image',
 			SettingsPage::$assets_url . '/styles/field/image.css',
 			[],
-			SettingsPage::VERSION
+			self::VERSION
 		);
 	}
 
 	public function sanitize($value) {
-		return sanitize_text_field($value);
+		return implode(
+			',',
+			array_filter(
+				array_map(
+					fn( $d ) => is_numeric( $d ) ? intval( $d ) : '',
+					explode( ',', $value )
+				)
+			)
+		);
 	}
 }
