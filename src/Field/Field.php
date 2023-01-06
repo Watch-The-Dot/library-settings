@@ -19,8 +19,10 @@ abstract class Field {
 		$this->label = $label;
 	}
 
-	public function set_default( $default_value ) {
+	public function set_default( $default_value ): self {
 		$this->default = $default_value;
+
+		return $this;
 	}
 
 	public function register( string $parent, string $tab, string $prefix ): void {
