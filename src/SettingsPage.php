@@ -53,8 +53,6 @@ class SettingsPage {
 			'position'    => null,
 		];
 
-		add_action( 'init', fn () => $this->gather_settings() );
-
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
@@ -62,6 +60,10 @@ class SettingsPage {
 
 	public function add_tab( Tab $tab ) {
 		$this->tabs[] = $tab;
+
+		foreach ( $tab->get_fields() as $key => $field ) {
+			$this->fields[ $key ] = $field;
+		}
 	}
 
 	/**
@@ -80,14 +82,6 @@ class SettingsPage {
 	}
 
 	/* ==== WordPress Actions and Filters ==== */
-
-	private function gather_settings(): void {
-		foreach ( $this->tabs as $tab ) {
-			foreach ( $tab->get_fields() as $key => $field ) {
-				$this->fields[ $key ] = $field;
-			}
-		}
-	}
 
 	private function register_settings(): void {
 		if ( empty( $this->tabs ) ) {
