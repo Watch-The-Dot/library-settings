@@ -1,7 +1,7 @@
 <?php
-namespace Watchthedot\Library\Settings;
+declare( strict_types=1 );
 
-use Watchthedot\Library\Settings\Field\Color;
+namespace Watchthedot\Library\Settings;
 
 class SettingsPage {
 
@@ -25,27 +25,27 @@ class SettingsPage {
 
 	public function __construct( string $file, string $title, string $prefix ) {
 		$this->plugin_file = $file;
-		$plugin_directory = dirname($this->plugin_file);
+		$plugin_directory  = dirname( $this->plugin_file );
 
-		self::$assets_url = plugins_url(str_replace($plugin_directory, "", dirname(__DIR__)) . '/assets', $file);
+		self::$assets_url = plugins_url( str_replace( $plugin_directory, '', dirname( __DIR__ ) ) . '/assets', $file );
 
-		$this->title = $title;
+		$this->title  = $title;
 		$this->prefix = $prefix;
 
-		if (str_ends_with($this->prefix, '_')) {
-			$this->prefix = substr($this->prefix, 0, strlen($this->prefix) - 1);
+		if ( str_ends_with( $this->prefix, '_' ) ) {
+			$this->prefix = substr( $this->prefix, 0, strlen( $this->prefix ) - 1 );
 		}
 
 		$this->position = [
-			'location' => 'options', // Possible settings: options, menu, submenu.
+			'location'    => 'options', // Possible settings: options, menu, submenu.
 			'parent_slug' => 'options-general.php',
-			'page_title' => $this->title,
-			'menu_title' => $this->title,
-			'capability' => 'manage_options',
-			'menu_slug' => $this->prefix . '_settings',
-			'function' => fn () => $this->show_page(),
-			'icon_url' => '',
-			'position' => null,
+			'page_title'  => $this->title,
+			'menu_title'  => $this->title,
+			'capability'  => 'manage_options',
+			'menu_slug'   => $this->prefix . '_settings',
+			'function'    => fn () => $this->show_page(),
+			'icon_url'    => '',
+			'position'    => null,
 		];
 
 		add_action( 'admin_init', fn () => $this->register_settings() );
@@ -67,7 +67,9 @@ class SettingsPage {
 	/* ==== WordPress Actions and Filters ==== */
 
 	private function register_settings(): void {
-		if (empty($this->tabs)) return;
+		if ( empty( $this->tabs ) ) {
+			return;
+		}
 
 		$current_tab = $this->get_current_tab();
 
@@ -102,9 +104,9 @@ class SettingsPage {
 		?>
 		<div class="wrap" id="<?php echo esc_attr( $this->prefix ); ?>_settings">
 			<h2><?php echo esc_html( $this->title ); ?></h2>
-			<?php if (count($this->tabs) === 0) : ?>
+			<?php if ( count( $this->tabs ) === 0 ) : ?>
 				<p>No settings have been defined</p>
-			<?php else: ?>
+			<?php else : ?>
 				<?php $current_tab_slug = $this->get_current_tab_slug(); ?>
 				<?php $this->show_tabs( $current_tab_slug ); ?>
 				<form method="post" action="options.php" enctype="multipart/form-data">
@@ -116,7 +118,7 @@ class SettingsPage {
 
 					<p class="submit">
 						<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab_slug ); ?>">
-						<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes', 'wordpress' ) ); ?>">
+						<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes', 'WordPress' ) ); ?>">
 					</p>
 				</form>
 			<?php endif; ?>
@@ -125,15 +127,17 @@ class SettingsPage {
 	}
 
 	private function show_tabs( string $current_tab_slug ): void {
-		if ( count( $this->tabs ) === 1 ) return;
+		if ( count( $this->tabs ) === 1 ) {
+			return;
+		}
 		$c = 0;
 		?>
 		<h2 class="nav-tab-wrapper">
 			<?php foreach ( $this->tabs as $tab ) : ?>
 				<?php
 				// Set tab class.
-				$class = 'nav-tab';
-				$class .= ( empty($current_tab_slug) && $c === 0 || $current_tab_slug === $tab->get_key() ) ? ' nav-tab-active' : '';
+				$class  = 'nav-tab';
+				$class .= ( empty( $current_tab_slug ) && 0 === $c || $current_tab_slug === $tab->get_key() ) ? ' nav-tab-active' : '';
 
 				// Set tab link.
 				$tab_link = add_query_arg( [ 'tab' => $tab->get_key() ] );
@@ -157,18 +161,18 @@ class SettingsPage {
 	}
 
 	private function get_current_tab(): Tab {
-		$tab_slugs = array_map(fn (Tab $tab) => $tab->get_key(), $this->tabs);
+		$tab_slugs = array_map( fn ( Tab $tab ) => $tab->get_key(), $this->tabs );
 
-		$tabs_by_slugs = array_combine($tab_slugs, $this->tabs);
+		$tabs_by_slugs = array_combine( $tab_slugs, $this->tabs );
 
 		return $tabs_by_slugs[ $this->get_current_tab_slug() ] ?? $this->tabs[0] ?? null;
 	}
 
 	private function get_current_tab_slug(): string {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification
 		$current_tab_slug = sanitize_key( $_POST['tab'] ?? $_GET['tab'] ?? '' );
 
-		$tab_slugs = array_map(fn (Tab $tab) => $tab->get_key(), $this->tabs);
+		$tab_slugs = array_map( fn ( Tab $tab ) => $tab->get_key(), $this->tabs );
 
 		if ( ! in_array( $current_tab_slug, $tab_slugs, true ) ) {
 			$current_tab_slug = '';

@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 use Watchthedot\Library\Settings\SettingsPage;
@@ -7,7 +9,7 @@ class Color extends Field {
 
 	private const VERSION = 1;
 
-	protected $default = "#ffffff";
+	protected $default = '#ffffff';
 
 	public function build( $name, $value ) {
 		?>
@@ -38,7 +40,7 @@ class Color extends Field {
 		);
 	}
 
-	public function sanitize($value) {
+	public function sanitize( $value ) {
 		return sanitize_hex_color( $value );
 	}
 }

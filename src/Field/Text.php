@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 class Text extends Field {
@@ -10,9 +12,8 @@ class Text extends Field {
 	 */
 	protected array $attributes = [];
 
-	public function __construct(string $key, ?string $label = null, string $type = "text")
-	{
-		parent::__construct($key, $label);
+	public function __construct( string $key, ?string $label = null, string $type = 'text' ) {
+		parent::__construct( $key, $label );
 
 		$this->type = $type;
 	}
@@ -22,21 +23,28 @@ class Text extends Field {
 	}
 
 	public function build( $name, $value ) {
-		$attributes = implode(" ", array_map(function ($key, $value) {
-			return "{$key}='" . esc_attr( $value ) . "'";
-		}, array_keys($this->attributes), array_values($this->attributes)));
+		$attributes = implode(
+			' ',
+			array_map(
+				function ( $key, $value ) {
+					return "{$key}='" . esc_attr( $value ) . "'";
+				},
+				array_keys( $this->attributes ),
+				array_values( $this->attributes )
+			)
+		);
 		?>
 		<input
 			type="<?php echo esc_attr( $this->type ); ?>"
 			id="<?php echo esc_attr( $name ); ?>"
 			name="<?php echo esc_attr( $name ); ?>"
 			value="<?php echo esc_attr( $value ); ?>"
-			<?php echo $attributes; ?>
+			<?php echo $attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		>
 		<?php
 	}
 
-	public function sanitize($value) {
-		return sanitize_text_field($value);
+	public function sanitize( $value ) {
+		return sanitize_text_field( $value );
 	}
 }

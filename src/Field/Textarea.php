@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 class Textarea extends Field {
@@ -14,17 +16,17 @@ class Textarea extends Field {
 			id="<?php echo esc_attr( $name ); ?>"
 			cols="<?php echo esc_attr( (string) $this->cols ); ?>"
 			rows="<?php echo esc_attr( (string) $this->rows ); ?>">
-			<?php echo $value; ?>
+			<?php echo esc_html( $value ); ?>
 		</textarea>
 		<?php
 	}
 
-	public function set_size(int $cols, int $rows) {
+	public function set_size( int $cols, int $rows ) {
 		$this->cols = $cols;
 		$this->rows = $rows;
 	}
 
-	public function sanitize($value) {
-		return sanitize_textarea_field($value);
+	public function sanitize( $value ) {
+		return sanitize_textarea_field( $value );
 	}
 }

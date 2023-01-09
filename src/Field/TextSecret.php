@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 /**
@@ -6,15 +8,15 @@ namespace Watchthedot\Library\Settings\Field;
  */
 class TextSecret extends Text {
 
-	public function build($name, $value) {
-		parent::build($name, empty($value) ? "" : $this->get_shroud());
+	public function build( $name, $value ) {
+		parent::build( $name, empty( $value ) ? '' : $this->get_shroud() );
 	}
 
 	public function get_shroud() {
-		return "";
+		return '';
 	}
 
-	public function sanitize($value) {
-		return sanitize_text_field($value);
+	public function sanitize( $value ) {
+		return sanitize_text_field( $value );
 	}
 }

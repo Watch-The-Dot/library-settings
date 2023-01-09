@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ruleset>
+  <file>src</file>
+
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+
+  <arg name="colors" />
+
+	<rule ref="VariableAnalysis"/>
+	<rule ref="ImportDetection">
+    <!-- This doesn't check if a symbol is available in the same namespace therefore it fires all the time -->
+    <exclude name="ImportDetection.Imports.RequireImports.Symbol"></exclude>
+  </rule>
+
+  <rule ref="WordPress-Extra">
+    <!-- All our plugins are written to use PSR-4 autoloading therefore let's remove this constrant -->
+    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+    <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+
+    <!-- The Shortform array syntax is better -->
+    <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+
+    <!-- Allows the ?: operator -->
+    <exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+
+	<!-- Function restored as of 5.9.0 -->
+	<exclude name="WordPress.WP.DeprecatedFunctions.sanitize_urlFound"></exclude>
+  </rule>
+
+	<rule ref="ImportDetection.Imports.RequireImports">
+		<properties>
+			<property name="ignoreUnimportedSymbols" value="/^(BD_PROCESSOR_[A-Z_]+|BD_STRIPE_[A-Z_]+|BD_PAYPAL_[A-Z_]+|BD_TXN[A-Z_]+|BD_TYPE[A-Z_]+|BILLINGDADDY_HOME|require_lib|WPCOM_[A-Z_]+|tracks_record_event|BD_INTERVAL_[A-Z_]+)$/"/>
+			<property name="ignoreGlobalsWhenInGlobalScope" value="true"/>
+			<property name="ignoreWordPressSymbols" value="true"/>
+		</properties>
+	</rule>
+  
+	<rule ref="ImportDetection.Imports.RequireImports.Import">
+		<type>error</type>
+	</rule>
+
+	<rule ref="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable">
+		<type>error</type>
+	</rule>
+
+	<rule ref="VariableAnalysis.CodeAnalysis.VariableAnalysis">
+		<properties>
+			<property name="allowUnusedCaughtExceptions" value="true"/>
+		</properties>
+	</rule>
+</ruleset>

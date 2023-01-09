@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 abstract class Field {
@@ -10,12 +12,12 @@ abstract class Field {
 	private string $label;
 
 	public function __construct( string $key, ?string $label = null ) {
-		if (is_null($label)) {
+		if ( is_null( $label ) ) {
 			$label = $key;
-			$key = sanitize_key($label);
+			$key   = sanitize_key( $label );
 		}
 
-		$this->key = $key;
+		$this->key   = $key;
 		$this->label = $label;
 	}
 
@@ -47,12 +49,12 @@ abstract class Field {
 
 		$current_value = get_option( $option_name, $this->default ) ?: $this->default;
 
-		$this->build($option_name, $current_value);
+		$this->build( $option_name, $current_value );
 	}
 
-	public abstract function build( $name, $value );
+	abstract public function build( $name, $value );
 
-	public abstract function sanitize( $value );
+	abstract public function sanitize( $value );
 
 	public function register_scripts() {
 		// NO-OP

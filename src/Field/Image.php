@@ -1,4 +1,6 @@
 <?php
+declare( strict_types=1 );
+
 namespace Watchthedot\Library\Settings\Field;
 
 use Watchthedot\Library\Settings\SettingsPage;
@@ -63,7 +65,7 @@ class Image extends Field {
 		);
 	}
 
-	public function sanitize($value) {
+	public function sanitize( $value ) {
 		return implode(
 			',',
 			array_filter(
