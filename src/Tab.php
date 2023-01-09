@@ -7,9 +7,9 @@ use Watchthedot\Library\Settings\Field\Field;
 
 class Tab {
 
-	private string $name;
+	protected string $name;
 
-	private string $key;
+	protected string $key;
 
 	private string $description = '';
 
@@ -18,9 +18,13 @@ class Tab {
 	 */
 	private array $fields = [];
 
-	public function __construct( string $name ) {
+	public function __construct( string $name, string $key = null ) {
+		if ( is_null( $key ) ) {
+			$key = sanitize_title( $name );
+		}
+
 		$this->name = $name;
-		$this->key  = sanitize_title( $name );
+		$this->key  = $key;
 	}
 
 	public function add_description( string $description ) {
