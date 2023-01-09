@@ -118,7 +118,7 @@ class SettingsPage {
 
 					<p class="submit">
 						<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab_slug ); ?>">
-						<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes', 'WordPress' ) ); ?>">
+						<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes' ) ); ?>">
 					</p>
 				</form>
 			<?php endif; ?>
