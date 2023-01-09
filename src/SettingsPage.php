@@ -51,8 +51,6 @@ class SettingsPage {
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
-
-		class_alias( Color::class, __NAMESPACE__ . "\\Field\\Colour" );
 	}
 
 	public function add_tab( Tab $tab ) {
