@@ -28,7 +28,11 @@ class Tab {
 	}
 
 	public function add_field( Field $field ): self {
-		$this->fields[] = $field;
+		if ( in_array( $field->get_key(), array_keys( $this->fields ), true ) ) {
+			throw new \Exception( "Cannot redefine settings field {$field->get_key()}" );
+		}
+
+		$this->fields[ $field->get_key() ] = $field;
 
 		return $this;
 	}
@@ -70,5 +74,9 @@ class Tab {
 
 	public function get_key(): string {
 		return $this->key;
+	}
+
+	public function get_fields(): array {
+		return $this->fields;
 	}
 }

@@ -23,6 +23,11 @@ class SettingsPage {
 	 */
 	private array $tabs = [];
 
+	/**
+	 * @var array<string, \Watchthedot\Library\Settings\Field\Field>
+	 */
+	private array $fields = [];
+
 	public function __construct( string $file, string $title, string $prefix ) {
 		$this->plugin_file = $file;
 		$plugin_directory  = dirname( $this->plugin_file );
@@ -48,6 +53,8 @@ class SettingsPage {
 			'position'    => null,
 		];
 
+		add_action( 'init', fn () => $this->gather_settings() );
+
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
@@ -64,7 +71,23 @@ class SettingsPage {
 		$this->position = $position;
 	}
 
+	public function get_option( string $key ) {
+		if ( ! isset( $this->fields[ $key ] ) ) {
+			return null;
+		}
+
+		return $this->fields[ $key ]->get_value( $this->prefix );
+	}
+
 	/* ==== WordPress Actions and Filters ==== */
+
+	private function gather_settings(): void {
+		foreach ( $this->tabs as $tab ) {
+			foreach ( $tab->get_fields() as $key => $field ) {
+				$this->fields[ $key ] = $field;
+			}
+		}
+	}
 
 	private function register_settings(): void {
 		if ( empty( $this->tabs ) ) {

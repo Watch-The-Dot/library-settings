@@ -11,6 +11,8 @@ abstract class Field {
 
 	private string $label;
 
+	private string $value;
+
 	public function __construct( string $key, ?string $label = null ) {
 		if ( is_null( $label ) ) {
 			$label = $key;
@@ -58,5 +60,20 @@ abstract class Field {
 
 	public function register_scripts() {
 		// NO-OP
+	}
+
+	/**
+	 * Get the value of key
+	 */
+	public function get_key() {
+		return $this->key;
+	}
+
+	public function get_value( string $prefix ) {
+		if ( ! isset( $this->value ) ) {
+			$this->value = $this->sanitize( get_option( $prefix . '_' . $this->key, $this->default ) );
+		}
+
+		return $this->value;
 	}
 }
