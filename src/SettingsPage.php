@@ -32,7 +32,9 @@ class SettingsPage {
 		$this->plugin_file = $file;
 		$plugin_directory  = dirname( $this->plugin_file );
 
-		self::$assets_url = plugins_url( str_replace( $plugin_directory, '', dirname( __DIR__ ) ) . '/assets', $file );
+		if ( ! isset( self::$assets_url ) ) {
+			self::$assets_url = plugins_url( str_replace( $plugin_directory, '', dirname( __DIR__ ) ) . '/assets', $file );
+		}
 
 		$this->title  = $title;
 		$this->prefix = $prefix;
