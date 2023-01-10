@@ -98,6 +98,31 @@ class SettingsPage {
 	}
 
 	private function display_debug_page() {
+		$library_composer_location = __DIR__ . '/../composer.json';
+		$loaded_version            = 'Unknown';
+
+		if ( file_exists( $library_composer_location ) ) {
+			$library_composer = json_decode( file_get_contents( $library_composer_location ), true );
+			$loaded_version   = $library_composer['version'] ?? 'Unknown';
+		}
+
+		$plugin_composer_lock_location = dirname( $this->plugin_file ) . '/composer.lock';
+		$plugin_version                = 'Unknown';
+
+		if ( file_exists( $plugin_composer_lock_location ) ) {
+			$plugin_composer_lock = json_decode( file_get_contents( $plugin_composer_lock_location ), true );
+			foreach ( $plugin_composer_lock['packages'] ?? [] as $package ) {
+				if ( $package['name'] !== $library_composer['name'] ) {
+					continue;
+				}
+
+				$plugin_version = $package['version'];
+				if ( str_starts_with( $plugin_version, 'dev-' ) ) {
+					$plugin_version = 'Git ' . substr( $package['source']['reference'], 0, 8 );
+				}
+			}
+		}
+
 		?>
 		<table border=1>
 			<tr>
@@ -108,8 +133,12 @@ class SettingsPage {
 				<td><?php echo esc_html( dirname( __DIR__ ) ); ?></td>
 			</tr>
 			<tr>
-				<th>Version</th>
-				<td><?php echo esc_html( json_decode( __DIR__ . '/../composer.json' )['version'] ?? 'Unknown' ); ?></td>
+				<th>Loaded Version</th>
+				<td><?php echo esc_html( $loaded_version ); ?></td>
+			</tr>
+			<tr>
+				<th>Included Version</th>
+				<td><?php echo esc_html( $plugin_version ); ?></td>
 			</tr>
 		</table>
 		<?php
