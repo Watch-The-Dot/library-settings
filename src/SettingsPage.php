@@ -53,6 +53,16 @@ class SettingsPage {
 			'position'    => null,
 		];
 
+		add_action( 'init', function () {
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && wp_get_current_user()->has_cap( 'manage_options' ) ) {
+				$this->add_tab(
+					new ContentTab( "Debug", fn () => $this->display_debug_page() )
+				);
+			}
+
+		} );
+
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
@@ -61,8 +71,12 @@ class SettingsPage {
 	public function add_tab( Tab $tab ) {
 		$this->tabs[] = $tab;
 
-		foreach ( $tab->get_fields() as $key => $field ) {
-			$this->fields[ $key ] = $field;
+		if ( $tab instanceof FormTab ) {
+			$tab->set_prefix( $this->prefix );
+
+			foreach ( $tab->get_fields() as $key => $field ) {
+				$this->fields[ $key ] = $field;
+			}
 		}
 	}
 
@@ -81,6 +95,24 @@ class SettingsPage {
 		return $this->fields[ $key ]->get_value( $this->prefix );
 	}
 
+	private function display_debug_page() {
+		?>
+		<table border=1>
+			<tr>
+				<th colspan="2">Settings Library</th>
+			</tr>
+			<tr>
+				<th>Loaded Directory</th>
+				<td><?php echo esc_html( dirname( __DIR__ ) ); ?></td>
+			</tr>
+			<tr>
+				<th>Version</th>
+				<td><?php echo esc_html( json_decode( __DIR__ . '/../composer.json' )['version'] ?? 'Unknown' ); ?></td>
+			</tr>
+		</table>
+		<?php
+	}
+
 	/* ==== WordPress Actions and Filters ==== */
 
 	private function register_settings(): void {
@@ -90,7 +122,9 @@ class SettingsPage {
 
 		$current_tab = $this->get_current_tab();
 
-		$current_tab->register_fields( $this->position['menu_slug'], $this->prefix );
+		if ( $current_tab instanceof FormTab ) {
+			$current_tab->register_fields( $this->position['menu_slug'] );
+		}
 	}
 
 	private function add_menu_item(): void {
@@ -127,16 +161,8 @@ class SettingsPage {
 				<?php $current_tab_slug = $this->get_current_tab_slug(); ?>
 				<?php $this->show_tabs( $current_tab_slug ); ?>
 				<form method="post" action="options.php" enctype="multipart/form-data">
-					<?php
-						// Get settings fields.
-						settings_fields( $this->prefix . '_settings' );
-						do_settings_sections( $this->prefix . '_settings' );
-					?>
-
-					<p class="submit">
-						<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab_slug ); ?>">
-						<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes' ) ); ?>">
-					</p>
+					<?php $this->get_current_tab()->display(); ?>
+					<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab_slug ); ?>">
 				</form>
 			<?php endif; ?>
 		</div>
