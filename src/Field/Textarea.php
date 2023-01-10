@@ -15,9 +15,8 @@ class Textarea extends Field {
 			name="<?php echo esc_attr( $name ); ?>"
 			id="<?php echo esc_attr( $name ); ?>"
 			cols="<?php echo esc_attr( (string) $this->cols ); ?>"
-			rows="<?php echo esc_attr( (string) $this->rows ); ?>">
-			<?php echo esc_html( $value ); ?>
-		</textarea>
+			rows="<?php echo esc_attr( (string) $this->rows ); ?>"
+		><?php echo esc_html( $value ); ?></textarea>
 		<?php
 	}
 
