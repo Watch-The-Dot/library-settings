@@ -55,15 +55,16 @@ class SettingsPage {
 			'position'    => null,
 		];
 
-		add_action( 'init', function () {
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && wp_get_current_user()->has_cap( 'manage_options' ) ) {
-				$this->add_tab(
-					new ContentTab( "Debug", fn () => $this->display_debug_page() )
-				);
+		add_action(
+			'init',
+			function () {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG && wp_get_current_user()->has_cap( 'manage_options' ) ) {
+					$this->add_tab(
+						new ContentTab( 'Debug', fn () => $this->display_debug_page() )
+					);
+				}
 			}
-
-		} );
+		);
 
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
@@ -102,6 +103,7 @@ class SettingsPage {
 		$loaded_version            = 'Unknown';
 
 		if ( file_exists( $library_composer_location ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			$library_composer = json_decode( file_get_contents( $library_composer_location ), true );
 			$loaded_version   = $library_composer['version'] ?? 'Unknown';
 		}
@@ -110,6 +112,7 @@ class SettingsPage {
 		$plugin_version                = 'Unknown';
 
 		if ( file_exists( $plugin_composer_lock_location ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			$plugin_composer_lock = json_decode( file_get_contents( $plugin_composer_lock_location ), true );
 			foreach ( $plugin_composer_lock['packages'] ?? [] as $package ) {
 				if ( $package['name'] !== $library_composer['name'] ) {
