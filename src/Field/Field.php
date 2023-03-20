@@ -13,6 +13,15 @@ abstract class Field {
 
 	private string $value;
 
+	/** @var (callable(string, mixed|null, mixed): void)[] */
+	private array $on_update_callbacks = [];
+
+	/**
+	 * @template T
+	 * @var (callable(T, T|null): T)[]
+	 */
+	private array $filter_value_callbacks = [];
+
 	public function __construct( string $key, ?string $label = null ) {
 		if ( is_null( $label ) ) {
 			$label = $key;
@@ -44,6 +53,17 @@ abstract class Field {
 			$tab,
 			[ 'prefix' => $prefix ]
 		);
+
+		$option_name = $prefix . '_' . $this->key;
+		foreach ( $this->filter_value_callbacks as $callback ) {
+			add_action( "pre_update_option_{$option_name}", fn ( $value, $old_value ) => call_user_func( $callback, $value, $old_value ), 10, 2 );
+		}
+
+		foreach ( $this->on_update_callbacks as $callback ) {
+			add_action( "add_option_{$option_name}", fn ( $_, $value ) => call_user_func( $callback, $this->key, null, $value ), 10, 2 );
+
+			add_action( "update_option_{$option_name}", fn ( $old, $new ) => call_user_func( $callback, $this->key, $old, $new ), 10, 2 );
+		}
 	}
 
 	private function pre_build( array $args ) {
@@ -57,6 +77,18 @@ abstract class Field {
 	abstract public function build( $name, $value );
 
 	abstract public function sanitize( $value );
+
+	public function filter_value( $callback ): self {
+		$this->filter_value_callbacks[] = $callback;
+
+		return $this;
+	}
+
+	public function on_update( $callback ): self {
+		$this->on_update_callbacks[] = $callback;
+
+		return $this;
+	}
 
 	public function register_scripts() {
 		// NO-OP
