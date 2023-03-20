@@ -7,6 +7,8 @@ abstract class Field {
 
 	protected string $key;
 
+	protected string $description = "";
+
 	protected $default = false;
 
 	private string $label;
@@ -30,6 +32,12 @@ abstract class Field {
 
 		$this->key   = $key;
 		$this->label = $label;
+	}
+
+	public function set_description( $description ): self {
+		$this->description = $description;
+
+		return $this;
 	}
 
 	public function set_default( $default_value ): self {
@@ -72,11 +80,23 @@ abstract class Field {
 		$current_value = get_option( $option_name, $this->default ) ?: $this->default;
 
 		$this->build( $option_name, $current_value );
+		$this->build_description( $option_name );
 	}
 
 	abstract public function build( $name, $value );
 
 	abstract public function sanitize( $value );
+
+	public function build_description( $name ) {
+		if ( empty( $this->description ) ) return "";
+
+		?>
+		<br>
+		<label for="<?php echo esc_attr( $name ); ?>">
+			<span class="description"><?php echo wp_kses_post( $this->description ); ?></span>
+		</label>
+		<?php
+	}
 
 	public function filter_value( $callback ): self {
 		$this->filter_value_callbacks[] = $callback;
