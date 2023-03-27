@@ -7,7 +7,7 @@ abstract class Field {
 
 	protected string $key;
 
-	protected string $description = "";
+	protected string $description = '';
 
 	protected $default = false;
 
@@ -88,7 +88,9 @@ abstract class Field {
 	abstract public function sanitize( $value );
 
 	public function build_description( $name ) {
-		if ( empty( $this->description ) ) return "";
+		if ( empty( $this->description ) ) {
+			return '';
+		}
 
 		?>
 		<br>
