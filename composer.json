@@ -1,43 +1,40 @@
 {
-    "name": "watchthedot/wp-settings-page",
-    "description": "A library to generalize a settings page for plugins",
-    "type": "library",
-    "license": "GPLv2-or-later",
-    "autoload": {
-        "psr-4": {
-            "Watchthedot\\Library\\Settings\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Dominic Carrington",
-            "email": "dominic@watchthedot.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.4",
-        "symfony/polyfill-php80": "^1.27",
-        "symfony/polyfill-php81": "^1.27",
-        "symfony/polyfill-php82": "^1.27",
-        "symfony/polyfill-php83": "^1.27"
-    },
-    "require-dev": {
-        "php-stubs/wordpress-stubs": "*",
-        "php-stubs/wordpress-globals": "*",
-        "squizlabs/php_codesniffer": "^3.6",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-        "wp-coding-standards/wpcs": "^2.3",
-        "sirbrillig/phpcs-variable-analysis": "^2.11"
-    },
-    "scripts": {
-        "test:sniff": "phpcs",
-        "test:sniff:fix": "phpcbf",
-        "docs:sniff": "phpcs --standard=phpcs.docs.xml",
-        "docs:sniff:fix": "phpcbf --standard=phpcs.docs.xml"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+  "name": "watchthedot/wp-settings-page",
+  "description": "A library to generalize a settings page for plugins",
+  "type": "library",
+  "license": "GPLv2-or-later",
+  "autoload": {
+    "psr-4": {
+      "Watchthedot\\Library\\Settings\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Dominic Carrington",
+      "email": "dominic@watchthedot.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "symfony/polyfill-php80": "^1.27"
+  },
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "*",
+    "php-stubs/wordpress-globals": "*",
+    "squizlabs/php_codesniffer": "^3.6",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+    "wp-coding-standards/wpcs": "^2.3",
+    "sirbrillig/phpcs-variable-analysis": "^2.11"
+  },
+  "scripts": {
+    "lint": "phpcs",
+    "lint:fix": "phpcbf",
+    "docs:lint": "phpcs --standard=phpcs.docs.xml",
+    "docs:lint:fix": "phpcbf --standard=phpcs.docs.xml"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }
