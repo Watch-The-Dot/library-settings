@@ -55,17 +55,6 @@ class SettingsPage {
 			'position'    => null,
 		];
 
-		add_action(
-			'init',
-			function () {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG && wp_get_current_user()->has_cap( 'manage_options' ) ) {
-					$this->add_tab(
-						new ContentTab( 'Debug', fn () => $this->display_debug_page() )
-					);
-				}
-			}
-		);
-
 		add_action( 'admin_init', fn () => $this->register_settings() );
 
 		add_action( 'admin_menu', fn () => $this->add_menu_item() );
@@ -96,55 +85,6 @@ class SettingsPage {
 		}
 
 		return $this->fields[ $key ]->get_value( $this->prefix );
-	}
-
-	private function display_debug_page() {
-		$library_composer_location = __DIR__ . '/../composer.json';
-		$loaded_version            = 'Unknown';
-
-		if ( file_exists( $library_composer_location ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			$library_composer = json_decode( file_get_contents( $library_composer_location ), true );
-			$loaded_version   = $library_composer['version'] ?? 'Unknown';
-		}
-
-		$plugin_composer_lock_location = dirname( $this->plugin_file ) . '/composer.lock';
-		$plugin_version                = 'Unknown';
-
-		if ( file_exists( $plugin_composer_lock_location ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			$plugin_composer_lock = json_decode( file_get_contents( $plugin_composer_lock_location ), true );
-			foreach ( $plugin_composer_lock['packages'] ?? [] as $package ) {
-				if ( $package['name'] !== $library_composer['name'] ) {
-					continue;
-				}
-
-				$plugin_version = $package['version'];
-				if ( str_starts_with( $plugin_version, 'dev-' ) ) {
-					$plugin_version = 'Git ' . substr( $package['source']['reference'], 0, 8 );
-				}
-			}
-		}
-
-		?>
-		<table border=1>
-			<tr>
-				<th colspan="2">Settings Library</th>
-			</tr>
-			<tr>
-				<th>Loaded Directory</th>
-				<td><?php echo esc_html( dirname( __DIR__ ) ); ?></td>
-			</tr>
-			<tr>
-				<th>Loaded Version</th>
-				<td><?php echo esc_html( $loaded_version ); ?></td>
-			</tr>
-			<tr>
-				<th>Included Version</th>
-				<td><?php echo esc_html( $plugin_version ); ?></td>
-			</tr>
-		</table>
-		<?php
 	}
 
 	/* ==== WordPress Actions and Filters ==== */
