@@ -50,7 +50,6 @@ class SettingsPage {
 			'menu_title'  => $this->title,
 			'capability'  => 'manage_options',
 			'menu_slug'   => $this->prefix . '_settings',
-			'function'    => fn () => $this->show_page(),
 			'icon_url'    => '',
 			'position'    => null,
 		];
@@ -109,10 +108,10 @@ class SettingsPage {
 			switch ( $args['location'] ) {
 				case 'options':
 				case 'submenu':
-					$page = add_submenu_page( $args['parent_slug'], $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], $args['function'] );
+					$page = add_submenu_page( $args['parent_slug'], $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], fn () => $this->show_page() );
 					break;
 				case 'menu':
-					$page = add_menu_page( $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], $args['function'], $args['icon_url'], $args['position'] );
+					$page = add_menu_page( $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], fn () => $this->show_page(), $args['icon_url'], $args['position'] );
 					break;
 				default:
 					return;
