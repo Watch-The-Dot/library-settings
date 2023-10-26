@@ -87,14 +87,14 @@ class Text extends Field {
 						// This is already sanitized to the values in the self::$valid_attributes property
 						echo sprintf(
 							'%s',
-							$key, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							esc_attr( $key ),
 						);
 					}
 				} else {
 					// This is already sanitized to the values in the self::$valid_attributes property
 					echo sprintf(
 						"%s='%s'",
-						$key, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						esc_attr( $key ),
 						esc_attr( $value ),
 					);
 				}
