@@ -12,7 +12,7 @@ class Image extends Field {
 	private bool $multiple = false;
 
 	public function build( $name, $value ) {
-		$images = explode( ',', $value ?: '' );
+		$images = explode( ',', is_scalar( $value ) ? (string) $value : '' );
 		?>
 		<div class="image_upload_preview" id="<?php echo esc_attr( $name ); ?>_preview">
 			<?php foreach ( $images as $image ) : ?>
@@ -71,7 +71,7 @@ class Image extends Field {
 			array_filter(
 				array_map(
 					fn( $d ) => is_numeric( $d ) ? intval( $d ) : '',
-					explode( ',', $value )
+					explode( ',', is_scalar( $value ) ? (string) $value : '' )
 				)
 			)
 		);
