@@ -9,7 +9,7 @@ abstract class Tab {
 
 	protected string $key;
 
-	public function __construct( string $name, string $key = null ) {
+	public function __construct( string $name, ?string $key = null ) {
 		if ( is_null( $key ) ) {
 			$key = sanitize_title( $name );
 		}

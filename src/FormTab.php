@@ -22,7 +22,7 @@ class FormTab extends Tab {
 
 	public function add_field( Field $field ): self {
 		if ( in_array( $field->get_key(), array_keys( $this->fields ), true ) ) {
-			throw new \Exception( "Cannot redefine settings field {$field->get_key()}" );
+			throw new \Exception( esc_html( "Cannot redefine settings field {$field->get_key()}" ) );
 		}
 
 		$this->fields[ $field->get_key() ] = $field;
@@ -36,10 +36,8 @@ class FormTab extends Tab {
 		do_settings_sections( $this->prefix . '_settings' );
 		?>
 
-		<p class="submit">
-			<input name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Save Changes' ) ); ?>">
-		</p>
 		<?php
+		submit_button( null, 'primary', 'Submit' );
 	}
 
 	public function register_fields( string $parent ): void {
